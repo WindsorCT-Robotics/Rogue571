@@ -7,15 +7,11 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Color;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ConveyerMaster;
-import frc.robot.commands.SpinToColor;
 import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Color;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Leveling;
 import frc.robot.subsystems.PowerCollection;
@@ -35,14 +31,10 @@ public class RobotContainer {
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
-    
 
     // TODO: put in commandbase
 
     public RobotContainer() {
-        // TODO: SmartDashBoard
-        Shuffleboard.putData("JoystickX", driveStick.getX());
-
         configureButtonBindings();
     }
 
