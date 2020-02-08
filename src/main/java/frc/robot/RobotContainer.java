@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Color;
 import frc.robot.subsystems.Drive;
@@ -28,14 +29,17 @@ public class RobotContainer {
     private final Drive drive = new Drive();
     private final Leveling level = new Leveling();
     private final PowerCollection powerCollection = new PowerCollection();
+
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
-
+    private final DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
     // TODO: put in commandbase
 
     public RobotContainer() {
         configureButtonBindings();
+
+        drive.setDefaultCommand(driveCommand);
     }
 
     private void configureButtonBindings() {
@@ -47,8 +51,6 @@ public class RobotContainer {
         // joystick buttons
         final JoystickButton intake = new JoystickButton(driveStick, 2);
         final JoystickButton output = new JoystickButton(driveStick, 1);
-
-
 
         // TODO: put in color parameters
         // green.whenPressed(new SpinToColor((byte)1));
