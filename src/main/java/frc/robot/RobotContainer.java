@@ -7,13 +7,12 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.commands.DriveCommand;
-
+import frc.robot.commands.ShootBalls;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Color;
 import frc.robot.subsystems.Conveyor;
@@ -39,6 +38,7 @@ public class RobotContainer {
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
     private final DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
+    
     // TODO: put in commandbase
 
     public RobotContainer() {
@@ -61,7 +61,7 @@ public class RobotContainer {
         // red.whenPressed(new SpinToColor((byte)2));
         // blue.whenPressed(new SpinToColor((byte)3));
         // yellow.whenPressed(new SpinToColor((byte)4));
-
+        output.whileHeld(new ShootBalls(conveyor, .25));
         // intake.whenPressed(); output.whenPressed();
     }
 

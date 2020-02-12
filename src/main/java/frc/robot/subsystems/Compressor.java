@@ -16,7 +16,7 @@ public class Compressor extends SubsystemBase {
         final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems")
             .getLayout("Compressor");
         layout.addBoolean("compressor enabled?", () -> c.enabled());
-        layout.addNumber("pressure switch value", () -> c.getPressureSwitchValue()));
+        layout.addNumber("pressure switch value", () -> c.getPressureSwitchValue());
         layout.addBoolean("compressor current", () -> c.getCompressorCurrent());
     }
 

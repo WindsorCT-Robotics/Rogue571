@@ -37,7 +37,7 @@ public class Conveyor extends SubsystemBase {
     private final SpeedController beltMotors = new SpeedControllerGroup(beltMotor1, beltMotor2);
 
     // pneumatics
-    private final Solenoid drawbridge = new Solenoid(0);
+    /*private final Solenoid drawbridge = new Solenoid(0);
 
     public void openDrawBridge() {
         drawbridge.set(false);
@@ -45,15 +45,18 @@ public class Conveyor extends SubsystemBase {
 
     public void closeDrawBridge() {
         drawbridge.set(true);
-    }
+    }*/
 
     // break beam sensors
     private final DigitalInput outtakeBeam = new DigitalInput(0);
     private final DigitalInput intakeBeam = new DigitalInput(1);
+    private final DigitalInput stopBeam = new DigitalInput(2);
 
-    private int numBalls = 0;
-    private boolean previousIntakeSensorTripped;
-    private boolean previousOuttakeSensorTripped;
+    private int numberBalls = 0;
+    private boolean previousBallIn = false;
+    private boolean previousBallOut = false;
+    private boolean previousBallStop = false;
+    private int maxLimit = 4;
 
     public Conveyor() {
         addChild("intakeMotor", intakeMotor);
@@ -61,31 +64,31 @@ public class Conveyor extends SubsystemBase {
         addChild("beltMotor2", beltMotor2);
         addChild("OuttakeBeam", outtakeBeam);
         addChild("IntakeBeam", intakeBeam);
+        addChild("StopBeam", stopBeam);
 
         final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems").getLayout("Conveyor");
-        layout.addBoolean("intake sensor", () -> isBallInIntakeZone());
-        layout.addBoolean("outtake sensor", () -> isBallInOuttakeZone());
+        layout.addBoolean("intake sensor", () -> isBallIn());
+        layout.addBoolean("outtake sensor", () -> isBallOut());
         layout.addNumber("number of balls", () -> getNumBalls());
 
-        final ShuffleboardLayout drawbridgeLayout = Shuffleboard.getTab("Subsystems").getLayout("Draw Bridge");
-        drawbridgeLayout.addBoolean("is drawbridge open?", drawbridge::get);
+        /*final ShuffleboardLayout drawbridgeLayout = Shuffleboard.getTab("Subsystems").getLayout("Draw Bridge");
+        drawbridgeLayout.addBoolean("is drawbridge open?", drawbridge::get);*/
     }
 
     @Override
     public void periodic() {
         // Put code here to be run every loop
-        final boolean currentIntakeSensorValue = isBallInIntakeZone();
-        final boolean currentOuttakeSensorValue = isBallInOuttakeZone();
-
-        if (!currentIntakeSensorValue && previousIntakeSensorTripped) {
-            numBalls++;
-            previousIntakeSensorTripped = currentIntakeSensorValue;
+        final boolean currentBallIn = isBallIn();
+        final boolean currentBallOut = isBallOut();
+        final boolean currentBallStop = isBallStop();
+//
+//TODO put in button code for intake roller (maybe)
+//if ball breaks beam = low ; if ball doesnt break beam = high 
+// this method tells me to keep track of balls
+        if(currentBallIn && !previousBallIn){
+            numberBalls++;
         }
-
-        if (!currentOuttakeSensorValue && previousOuttakeSensorTripped) {
-            numBalls--;
-            previousOuttakeSensorTripped = currentOuttakeSensorValue;
-        }
+        previousBallIn = currentBallIn;
     }
 
     // Put methods for controlling this subsystem
@@ -98,15 +101,36 @@ public class Conveyor extends SubsystemBase {
         beltMotors.set(speed);
     }
 
-    public boolean isBallInIntakeZone() {
-        return intakeBeam.get();
+    public boolean isBallIn() {
+        return !intakeBeam.get();
     }
 
     private int getNumBalls() {
-        return numBalls;
+        return numberBalls;
     }
 
-    public boolean isBallInOuttakeZone() {
-        return outtakeBeam.get();
+    public boolean isBallOut() {
+        return !outtakeBeam.get();
+    }
+
+    public boolean isBallStop() {
+        return !stopBeam.get();
+    }
+
+    public void resetBallCounter(){
+        numberBalls = 0;
+    }
+
+    public boolean isFull(){
+        if (numberBalls == maxLimit){
+            return true;
+        }
+        else{return false;} 
+        
+    }
+
+    public int getCount(){
+        return numberBalls;
+
     }
 }
