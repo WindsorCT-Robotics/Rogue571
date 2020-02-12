@@ -2,16 +2,12 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.networktables.NetworkTableEntry;
+
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
-import frc.robot.subsystems.Drive;
 
 public class Power extends SubsystemBase {
     private final PowerDistributionPanel pDP = new PowerDistributionPanel(20);

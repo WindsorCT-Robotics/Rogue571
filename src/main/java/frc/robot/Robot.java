@@ -16,11 +16,14 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
+import frc.robot.commands.AutonomousCommand;
+import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Color;
+import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Leveling;
+import frc.robot.subsystems.PowerCollection;
 
 /**
  * The VM is configured to automatically run this class, and to call the
