@@ -7,15 +7,19 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+
 import frc.robot.commands.DriveCommand;
+
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Color;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Leveling;
-import frc.robot.subsystems.PowerCollection;
+import frc.robot.subsystems.Compressor;
 
 /**
  * This class takes the place of much of the old robot class, and entirely
@@ -28,7 +32,8 @@ public class RobotContainer {
     private final Color color = new Color();
     private final Drive drive = new Drive();
     private final Leveling level = new Leveling();
-    private final PowerCollection powerCollection = new PowerCollection();
+    private final Conveyor conveyor = new Conveyor();
+    private final Compressor compressor = new Compressor();
 
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);
@@ -38,7 +43,6 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureButtonBindings();
-
         drive.setDefaultCommand(driveCommand);
     }
 

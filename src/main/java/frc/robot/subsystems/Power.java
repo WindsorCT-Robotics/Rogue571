@@ -2,7 +2,6 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -32,7 +31,7 @@ public class Power extends SubsystemBase {
                                  channel15Supplier;
 
     public Power() {
-        final ShuffleboardLayout powerDistributionPanelLayout = Shuffleboard.getTab("Commands")
+        final ShuffleboardLayout powerDistributionPanelLayout = Shuffleboard.getTab("Subsystems")
         .getLayout("Power Distribution Panel", BuiltInLayouts.kList);
 
         inputVoltageSupplier = () -> pDP.getVoltage();
