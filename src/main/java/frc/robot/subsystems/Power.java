@@ -56,6 +56,7 @@ public class Power extends SubsystemBase {
 
         powerDistributionPanelLayout.addNumber("Input Voltage", inputVoltageSupplier);
         powerDistributionPanelLayout.addNumber("Temperature (C)", temperatureCSupplier);
+        powerDistributionPanelLayout.addNumber("Total Current", totalCurrentSupplier);
         powerDistributionPanelLayout.addNumber("Channel 00", channel00Supplier);
         powerDistributionPanelLayout.addNumber("Channel 01", channel01Supplier);
         powerDistributionPanelLayout.addNumber("Channel 02", channel02Supplier);

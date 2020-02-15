@@ -72,6 +72,4 @@ public class BallIntake extends CommandBase {
             conveyor.turnConveyor(0);
         }
     }
-
-   
 }
