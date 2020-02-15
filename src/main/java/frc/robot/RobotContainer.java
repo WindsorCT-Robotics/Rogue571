@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShootBalls;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Color;
+import frc.robot.subsystems.ColorSubsystem;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Leveling;
@@ -28,7 +28,7 @@ import frc.robot.subsystems.Compressor;
 public class RobotContainer {
     // initializing robot subsytems
     private final Climber climb = new Climber();
-    private final Color color = new Color();
+    private final ColorSubsystem color = new ColorSubsystem();
     private final Drive drive = new Drive();
     private final Leveling level = new Leveling();
     private final Conveyor conveyor = new Conveyor();
