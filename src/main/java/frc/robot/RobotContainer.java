@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShootBalls;
-import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Color;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
@@ -27,7 +27,7 @@ import frc.robot.subsystems.Compressor;
  */
 public class RobotContainer {
     // initializing robot subsytems
-    private final Climb climb = new Climb();
+    private final Climber climb = new Climber();
     private final Color color = new Color();
     private final Drive drive = new Drive();
     private final Leveling level = new Leveling();

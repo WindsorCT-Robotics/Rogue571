@@ -41,5 +41,4 @@ public class BallIntake extends CommandBase {
     public void end(boolean interrupted) {
     }
 
-   
 }
