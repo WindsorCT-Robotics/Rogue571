@@ -12,14 +12,22 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ColorSubsystem;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  *
  */
 public class SpinToColor extends CommandBase {
 
-    public SpinToColor(ColorSubsystem colorSubsystem) {
+    private final Color targetColor;
+    private final ColorSubsystem colorSubsystem;
+    private Color currentColor;
+    private int correctReading;
 
+    public SpinToColor(ColorSubsystem colorSubsystem, Color targetColor) {
+        this.targetColor = targetColor;
+        this.colorSubsystem = colorSubsystem;
+        this.correctReading = 0;
         addRequirements(colorSubsystem);
 
     }
@@ -32,12 +40,25 @@ public class SpinToColor extends CommandBase {
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
+        colorSubsystem.spin(.7);
+
     }
 
     // Make this return true when this Command no longer needs to run execute()
     @Override
     public boolean isFinished() {
-        return false;
+        currentColor = colorSubsystem.getCurrentColor();
+        if (currentColor != targetColor) {
+            return false;
+        } else {
+            correctReading++;
+            if (correctReading == 3) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
     }
 
     // Called once after isFinished returns true
