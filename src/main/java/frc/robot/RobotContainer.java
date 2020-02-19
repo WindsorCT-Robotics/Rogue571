@@ -7,13 +7,24 @@
 
 package frc.robot;
 
+import java.util.Map;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonomousCommand;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.commands.BallIntake;
+import frc.robot.commands.BallOutput;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShootBalls;
+import frc.robot.commands.SpinToColor;
+import frc.robot.commands.TurnTo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ColorSubsystem;
 import frc.robot.subsystems.Conveyor;
@@ -37,16 +48,20 @@ public class RobotContainer {
     private final Compressor compressor = new Compressor();
     private final Power power = new Power();
 
+    private final ShuffleboardTab commandTab = Shuffleboard.getTab("Commands");
+    private final NetworkTableEntry targetAngle = commandTab.add("Target Angle", 1).getEntry();
+
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
     private final DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
-    
+
     // TODO: put in commandbase
 
     public RobotContainer() {
         configureButtonBindings();
-        //drive.setDefaultCommand();
+        drive.setDefaultCommand(driveCommand);
+        addCommandsToDashboard();
     }
 
     private void configureButtonBindings() {
@@ -59,13 +74,8 @@ public class RobotContainer {
         final JoystickButton intake = new JoystickButton(driveStick, 2);
         final JoystickButton output = new JoystickButton(driveStick, 1);
 
-        // TODO: put in color parameters
-        // green.whenPressed(new SpinToColor((byte)1));
-        // red.whenPressed(new SpinToColor((byte)2));
-        // blue.whenPressed(new SpinToColor((byte)3));
-        // yellow.whenPressed(new SpinToColor((byte)4));
-        output.whileHeld(new ShootBalls(conveyor, .25));
-        // intake.whenPressed(); output.whenPressed();
+        // TODO: Add actions for color wheel
+                output.whileHeld(new ShootBalls(conveyor, .25));
     }
     
     public Command getAutonomousCommand(){
@@ -73,4 +83,37 @@ public class RobotContainer {
     }
 
 
+    private void addCommandsToDashboard() {
+
+        ShuffleboardLayout BallIntakeCommand = commandTab.getLayout("BallIntake", BuiltInLayouts.kList).withSize(2, 2)
+                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+        BallIntakeCommand.add(new BallIntake(conveyor));
+
+        ShuffleboardLayout BallOutputCommand = commandTab.getLayout("BallOutput", BuiltInLayouts.kList).withSize(2, 2)
+                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+        BallOutputCommand.add(new BallOutput(conveyor));
+
+        ShuffleboardLayout ShootBallsCommand = commandTab.getLayout("ShootBalls", BuiltInLayouts.kList).withSize(2, 2)
+                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+        ShootBallsCommand.add(new ShootBalls(conveyor, 0.5));
+
+        ShuffleboardLayout colorWheelCommand = commandTab.getLayout("ColorWheel", BuiltInLayouts.kList).withSize(2, 2)
+                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+        colorWheelCommand.add(new SpinToColor(color, Color.kRed));
+        colorWheelCommand.add(new SpinToColor(color, Color.kBlue));
+        colorWheelCommand.add(new SpinToColor(color, Color.kGreen));
+        colorWheelCommand.add(new SpinToColor(color, Color.kYellow));
+
+        // turn to button
+        
+        ShuffleboardLayout turnToCommand = commandTab.getLayout("Target Angle", BuiltInLayouts.kList).withSize(2, 2)
+                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+        turnToCommand.add(new TurnTo(targetAngle.getDouble(1.0), drive));
+
+    }
 }

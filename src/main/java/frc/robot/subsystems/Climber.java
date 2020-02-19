@@ -35,5 +35,4 @@ public class Climber extends SubsystemBase {
     public void turnWinch(int speed) {
         winch.set(speed);
     }
-
 }
