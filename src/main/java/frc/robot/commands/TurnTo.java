@@ -23,15 +23,17 @@ public class TurnTo extends PIDCommand {
 
   /**
    * Creates a new TurnTo.
+   * @param heading  heading on a scale from -180 to 180
+   * @param drive    drive subsystem that must be passed in
    */
-  public TurnTo(double degrees, Drive drive) {
+  public TurnTo(double heading, Drive drive) {
     super(
         // The controller that the command will use
         new PIDController(4, 0, 0),
         // This should return the measurement
         drive.navx::getYaw,
         // This should return the setpoint (can also be a constant)
-        degrees,
+        heading,
         // This uses the output
         output -> drive.tankDrive(output, -output));
     addRequirements(drive);
