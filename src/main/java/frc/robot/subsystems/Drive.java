@@ -6,6 +6,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -34,7 +35,7 @@ public class Drive extends SubsystemBase {
     private final SpeedController left = new SpeedControllerGroup(new WPI_TalonSRX(1), new WPI_TalonSRX(2));
     private final SpeedController right = new SpeedControllerGroup(new WPI_TalonSRX(3), new WPI_TalonSRX(4));
     public AHRS navx;
-    private final ShuffleboardLayout distance;
+    private final ShuffleboardLayout layout;
 
     public Drive() {
 
@@ -52,7 +53,8 @@ public class Drive extends SubsystemBase {
             DriverStation.reportError("NavX init failed- some autonomous components may not work right!", true);
         }
 
-        distance = Shuffleboard.getTab("Commands").getLayout("Distances", BuiltInLayouts.kList);
+        layout = Shuffleboard.getTab("Subsystems").getLayout("NavX", BuiltInLayouts.kList);
+        layout.withProperties(Map.of("Label position", "LEFT"));
         putToDashboard(); // put values onto dashboard
 
     }
@@ -129,11 +131,11 @@ public class Drive extends SubsystemBase {
         final BooleanSupplier connectionSupplier = () -> navx.isConnected();
         final BooleanSupplier calibrationSupplier = () -> navx.isCalibrating();
 
-        distance.addNumber("distance", distanceSupplier);
-        distance.addNumber("yaw", yawSupplier);
-        distance.addNumber("acceleration", speedSupplier);
-        distance.addBoolean("connected", connectionSupplier);
-        distance.addBoolean("calibrating", calibrationSupplier);
+        layout.addNumber("distance", distanceSupplier);
+        layout.addNumber("yaw", yawSupplier);
+        layout.addNumber("acceleration", speedSupplier);
+        layout.addBoolean("connected", connectionSupplier);
+        layout.addBoolean("calibrating", calibrationSupplier);
 
     }
 

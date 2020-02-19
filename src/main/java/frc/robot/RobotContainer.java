@@ -18,6 +18,7 @@ import frc.robot.subsystems.ColorSubsystem;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Leveling;
+import frc.robot.subsystems.Power;
 import frc.robot.subsystems.Compressor;
 
 /**
@@ -33,6 +34,7 @@ public class RobotContainer {
     private final Leveling level = new Leveling();
     private final Conveyor conveyor = new Conveyor();
     private final Compressor compressor = new Compressor();
+    private final Power power = new Power();
 
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);

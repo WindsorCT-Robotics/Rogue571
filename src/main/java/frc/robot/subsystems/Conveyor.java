@@ -12,12 +12,14 @@ package frc.robot.subsystems;
 
 import frc.robot.commands.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -31,7 +33,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Conveyor extends SubsystemBase {
 
     private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(7);
-
     private final WPI_TalonSRX beltMotor1 = new WPI_TalonSRX(9);
     private final WPI_TalonSRX beltMotor2 = new WPI_TalonSRX(10);
     private final SpeedController beltMotors = new SpeedControllerGroup(beltMotor1, beltMotor2);
@@ -62,11 +63,13 @@ public class Conveyor extends SubsystemBase {
         addChild("intakeMotor", intakeMotor);
         addChild("beltMotor1", beltMotor1);
         addChild("beltMotor2", beltMotor2);
+        addChild("beltMotors", (SpeedControllerGroup)beltMotors);
         addChild("OuttakeBeam", outtakeBeam);
         addChild("IntakeBeam", intakeBeam);
         addChild("StopBeam", stopBeam);
 
-        final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems").getLayout("Conveyor");
+        final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems").getLayout("Conveyor", BuiltInLayouts.kList);
+        layout.withProperties(Map.of("Label position", "LEFT"));
         layout.addBoolean("intake sensor", () -> isBallIn());
         layout.addBoolean("outtake sensor", () -> isBallOut());
         layout.addNumber("number of balls", () -> getNumBalls());

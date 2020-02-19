@@ -1,6 +1,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -26,8 +27,9 @@ public class Power extends SubsystemBase {
                                  PcmCurrent;
 
     public Power() {
-        final ShuffleboardLayout powerDistributionPanelLayout = Shuffleboard.getTab("Subsystems")
-        .getLayout("Power Distribution Panel", BuiltInLayouts.kList);
+        final ShuffleboardLayout powerDistributionPanelLayout = Shuffleboard.getTab("Power")
+        .getLayout("PowerPanel", BuiltInLayouts.kList);
+        powerDistributionPanelLayout.withProperties(Map.of("Label position", "LEFT"));
 
         inputVoltageSupplier = () -> pDP.getVoltage();
         temperatureCSupplier = () -> pDP.getTemperature();
