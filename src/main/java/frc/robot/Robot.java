@@ -15,9 +15,10 @@ import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -52,12 +53,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-
     }
 
     @Override
     public void disabledPeriodic() {
-        Scheduler.getInstance().run();
     }
 
     @Override
@@ -73,7 +72,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
     }
 
     @Override
@@ -84,6 +82,7 @@ public class Robot extends TimedRobot {
         // this line or comment it out.
         if (autonomousCommand != null)
             autonomousCommand.cancel();
+        CommandScheduler.getInstance().run();
     }
 
     /**
@@ -91,6 +90,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        Scheduler.getInstance().run();
     }
+
+    @Override
+    public void robotPeriodic(){
+        CommandScheduler.getInstance().run();
+    }
+
 }
