@@ -41,8 +41,8 @@ public class Drive extends SubsystemBase {
 
         differentialDrive = new DifferentialDrive(left, right);
         addChild("Differential Drive", differentialDrive);
-        differentialDrive.setSafetyEnabled(true);
-        differentialDrive.setExpiration(0.1);
+        differentialDrive.setSafetyEnabled(false);
+        differentialDrive.setExpiration(0.2);
         differentialDrive.setMaxOutput(1.0);
 
         // init navx
@@ -55,7 +55,7 @@ public class Drive extends SubsystemBase {
 
         layout = Shuffleboard.getTab("Subsystems").getLayout("NavX", BuiltInLayouts.kList);
         layout.withProperties(Map.of("Label position", "LEFT"));
-        putToDashboard(); // put values onto dashboard
+//        putToDashboard(); // put values onto dashboard
 
     }
 

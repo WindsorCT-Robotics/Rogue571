@@ -10,6 +10,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 
@@ -18,11 +20,14 @@ import frc.robot.subsystems.Climber;
  */
 public class RobotLift extends CommandBase {
 
-    private double m_Speed;
+    private DoubleSupplier speed;
+    private Climber climb;
+    private double speedValue;
 
-    public RobotLift(Climber climb, double Speed) {
+    public RobotLift(Climber climb, DoubleSupplier speed) {
 
-        m_Speed = Speed;
+        this.speed = speed;
+        this.climb = climb;
 
         addRequirements(climb);
 
@@ -36,6 +41,8 @@ public class RobotLift extends CommandBase {
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
+        speedValue = speed.getAsDouble();
+        climb.turn(speedValue);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -43,6 +50,7 @@ public class RobotLift extends CommandBase {
     public boolean isFinished() {
         return false;
     }
+
 
     // Called once after isFinished returns true
     @Override
