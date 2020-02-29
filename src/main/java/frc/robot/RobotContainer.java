@@ -46,19 +46,12 @@ import frc.robot.commands.RobotLift;
  */
 public class RobotContainer {
     // initializing robot subsytems
-    private final Compressor compressor = new Compressor();
-    private final Climber climb = new Climber();
-    //private final ColorSubsystem color = new ColorSubsystem();
-    private final Drive drive = new Drive();
-    //private final Leveling level = new Leveling();
-    //private final Conveyor conveyor = new Conveyor();
-    //private final Power power = new Power();
+    private Compressor compressor;
     private Climber climb;
     private ColorSubsystem color;
     private Drive drive;
     private Leveling level;
     private Conveyor conveyor;
-    private Compressor compressor;
     private Power power;
 
     private boolean climbEnabled = false;
@@ -75,7 +68,8 @@ public class RobotContainer {
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
-    private final DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
+  
+    private DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
     private final RobotLift robotLift = new RobotLift(climb, () -> opStick.getY(Hand.kRight));
     
     // TODO: put in commandbase
@@ -87,30 +81,24 @@ public class RobotContainer {
         createConveyorSubsystem();
         configureButtonBindings();
         createDriveSubsystem();
-        drive.setDefaultCommand(driveCommand);
         createLevelSubsystem();
         createPowerSubsystem();
-        drive.setDefaultCommand(driveCommand);
         addCommandsToDashboard();
-        LiveWindow.disableTelemetry(power);
+
+        LiveWindow.disableAllTelemetry();
     }
 
     private void configureButtonBindings() {
-        SmartDashboard.putData("releaseLatch", new ReleaseLatch(climb));
-        // xbox buttons
-        final JoystickButton green = new JoystickButton(opStick, 1);
-        final JoystickButton red = new JoystickButton(opStick, 2);
-        final JoystickButton blue = new JoystickButton(opStick, 3);
-        final JoystickButton yellow = new JoystickButton(opStick, 4);
-
-        final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
-
         // joystick buttons
         final JoystickButton intake = new JoystickButton(driveStick, 2);
         final JoystickButton output = new JoystickButton(driveStick, 1);
-
-        releaseLatch.whenPressed(new ReleaseLatch(climb));
+        intake.whenPressed(new BallIntake(conveyor));
         output.whileHeld(new ShootBalls(conveyor, .25));
+      
+        SmartDashboard.putData("releaseLatch", new ReleaseLatch(climb));
+
+        final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
+        releaseLatch.whenPressed(new ReleaseLatch(climb));
     }
 
     public Command getAutonomousCommand() {
@@ -145,6 +133,7 @@ public class RobotContainer {
         if (driveEnabled) {
             drive = new Drive();
             driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
+            drive.setDefaultCommand(driveCommand);
         }
     }
 
@@ -176,14 +165,6 @@ public class RobotContainer {
                 .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
         ShootBallsCommand.add(new ShootBalls(conveyor, 0.5));
-
-        ShuffleboardLayout colorWheelCommand = commandTab.getLayout("ColorWheel", BuiltInLayouts.kList).withSize(2, 2)
-                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-
-        colorWheelCommand.add(new SpinToColor(color, Color.kRed));
-        colorWheelCommand.add(new SpinToColor(color, Color.kBlue));
-        colorWheelCommand.add(new SpinToColor(color, Color.kGreen));
-        colorWheelCommand.add(new SpinToColor(color, Color.kYellow));
 
         // turn to button
         
