@@ -11,6 +11,7 @@ import java.util.Map;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonomousCommand;
@@ -62,6 +63,7 @@ public class RobotContainer {
         configureButtonBindings();
         drive.setDefaultCommand(driveCommand);
         addCommandsToDashboard();
+        LiveWindow.disableTelemetry(power);
     }
 
     private void configureButtonBindings() {
