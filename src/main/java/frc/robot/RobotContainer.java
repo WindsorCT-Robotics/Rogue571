@@ -28,11 +28,11 @@ import frc.robot.commands.SpinToColor;
 import frc.robot.commands.TurnTo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ColorSubsystem;
+import frc.robot.subsystems.Compressor;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Leveling;
 import frc.robot.subsystems.Power;
-import frc.robot.subsystems.Compressor;
 
 /**
  * This class takes the place of much of the old robot class, and entirely
@@ -41,13 +41,21 @@ import frc.robot.subsystems.Compressor;
  */
 public class RobotContainer {
     // initializing robot subsytems
-    private final Climber climb = new Climber();
-    private final ColorSubsystem color = new ColorSubsystem();
-    private final Drive drive = new Drive();
-    private final Leveling level = new Leveling();
-    private final Conveyor conveyor = new Conveyor();
-    private final Compressor compressor = new Compressor();
-    private final Power power = new Power();
+    private Climber climb;
+    private ColorSubsystem color;
+    private Drive drive;
+    private Leveling level;
+    private Conveyor conveyor;
+    private Compressor compressor;
+    private Power power;
+
+    private boolean climbEnabled = false;
+    private boolean colorEnabled = false;
+    private boolean driveEnabled = true;
+    private boolean levelEnabled = false;
+    private boolean conveyorEnabled = false;
+    private boolean compressorEnabled = true;
+    private boolean powerEnabled = false;
 
     private final ShuffleboardTab commandTab = Shuffleboard.getTab("Commands");
     private final NetworkTableEntry targetAngle = commandTab.add("Target Angle", 1).getEntry();
@@ -60,7 +68,15 @@ public class RobotContainer {
     // TODO: put in commandbase
 
     public RobotContainer() {
+        createClimbSubsystem();
+        createColorSubsystem();
+        createCompressorSubsystem();
+        createConveyorSubsystem();
         configureButtonBindings();
+        createDriveSubsystem();
+        drive.setDefaultCommand(driveCommand);
+        createLevelSubsystem();
+        createPowerSubsystem();
         drive.setDefaultCommand(driveCommand);
         addCommandsToDashboard();
         LiveWindow.disableTelemetry(power);
@@ -75,15 +91,55 @@ public class RobotContainer {
         // joystick buttons
         final JoystickButton intake = new JoystickButton(driveStick, 2);
         final JoystickButton output = new JoystickButton(driveStick, 1);
-
-        // TODO: Add actions for color wheel
-                output.whileHeld(new ShootBalls(conveyor, .25));
+        output.whileHeld(new ShootBalls(conveyor, .25));
     }
-    
-    public Command getAutonomousCommand(){
+
+    public Command getAutonomousCommand() {
         return new AutonomousCommand(drive);
     }
 
+    public void createClimbSubsystem() {
+        if (climbEnabled) {
+            climb = new Climber();
+        }
+    }
+
+    public void createColorSubsystem() {
+        if (colorEnabled) {
+            color = new ColorSubsystem();
+        }
+    }
+
+    public void createCompressorSubsystem() {
+        if (compressorEnabled) {
+            compressor = new Compressor();
+        }
+    }
+
+    public void createConveyorSubsystem() {
+        if (conveyorEnabled) {
+            conveyor = new Conveyor();
+        }
+    }
+
+    public void createDriveSubsystem() {
+        if (driveEnabled) {
+            drive = new Drive();
+            driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
+        }
+    }
+
+    public void createLevelSubsystem() {
+        if (levelEnabled) {
+            level = new Leveling();
+        }
+    }
+
+    public void createPowerSubsystem() {
+        if (powerEnabled) {
+            power = new Power();
+        }
+    }
 
     private void addCommandsToDashboard() {
 
