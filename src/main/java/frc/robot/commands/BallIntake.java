@@ -10,6 +10,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Conveyor;
 
@@ -26,6 +28,8 @@ public class BallIntake extends CommandBase {
     public BallIntake(Conveyor conveyor) {
         this.conveyor = conveyor;
         addRequirements(conveyor);
+
+
     }
 
     // Called just before this Command runs the first time
@@ -56,8 +60,9 @@ public class BallIntake extends CommandBase {
     }
 
     private void manageIntakeRollers() {
-        //right now we are assuming that it is OK for the intake rollers to turn as long as there is 
-        //not a ball at the conveyor entrance. 
+        // right now we are assuming that it is OK for the intake rollers to turn as
+        // long as there is
+        // not a ball at the conveyor entrance.
         if (conveyor.isBallIn()) {
             conveyor.turnIntakeRollers(0);
         } else {
@@ -66,7 +71,7 @@ public class BallIntake extends CommandBase {
     }
 
     private void manageConveyors() {
-        if(conveyor.isBallIn()) {
+        if (conveyor.isBallIn()) {
             conveyor.turnConveyor(conveyorSpeed);
         } else {
             conveyor.turnConveyor(0);

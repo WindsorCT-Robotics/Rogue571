@@ -56,5 +56,4 @@ public class Climber extends SubsystemBase {
     public void closeLatch(){
         latchSolenoid.set(false);
     }
-
 }
