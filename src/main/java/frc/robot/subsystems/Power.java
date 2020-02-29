@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Power extends SubsystemBase {
-    private final PowerDistributionPanel pDP = new PowerDistributionPanel(20);
+    private final PowerDistributionPanel pDP = new PowerDistributionPanel(0);
     private final DoubleSupplier inputVoltageSupplier,
                                  temperatureCSupplier,
                                  totalCurrentSupplier,
