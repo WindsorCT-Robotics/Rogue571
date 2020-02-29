@@ -63,7 +63,7 @@ public class RobotContainer {
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
-    private final DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
+    private DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
 
     // TODO: put in commandbase
 
@@ -74,23 +74,18 @@ public class RobotContainer {
         createConveyorSubsystem();
         configureButtonBindings();
         createDriveSubsystem();
-        drive.setDefaultCommand(driveCommand);
         createLevelSubsystem();
         createPowerSubsystem();
-        drive.setDefaultCommand(driveCommand);
         addCommandsToDashboard();
-        LiveWindow.disableTelemetry(power);
+
+        LiveWindow.disableAllTelemetry();
     }
 
     private void configureButtonBindings() {
-        // xbox buttons
-        final JoystickButton green = new JoystickButton(opStick, 1);
-        final JoystickButton red = new JoystickButton(opStick, 2);
-        final JoystickButton blue = new JoystickButton(opStick, 3);
-        final JoystickButton yellow = new JoystickButton(opStick, 4);
         // joystick buttons
         final JoystickButton intake = new JoystickButton(driveStick, 2);
         final JoystickButton output = new JoystickButton(driveStick, 1);
+        intake.whenPressed(new BallIntake(conveyor));
         output.whileHeld(new ShootBalls(conveyor, .25));
     }
 
@@ -126,6 +121,7 @@ public class RobotContainer {
         if (driveEnabled) {
             drive = new Drive();
             driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
+            drive.setDefaultCommand(driveCommand);
         }
     }
 
