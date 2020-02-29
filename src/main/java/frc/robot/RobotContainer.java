@@ -11,6 +11,8 @@ import java.util.Map;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -33,6 +35,9 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Leveling;
 import frc.robot.subsystems.Power;
+import frc.robot.subsystems.Compressor;
+import frc.robot.commands.ReleaseLatch;
+import frc.robot.commands.RobotLift;
 
 /**
  * This class takes the place of much of the old robot class, and entirely
@@ -41,12 +46,12 @@ import frc.robot.subsystems.Power;
  */
 public class RobotContainer {
     // initializing robot subsytems
+    private Compressor compressor;
     private Climber climb;
     private ColorSubsystem color;
     private Drive drive;
     private Leveling level;
     private Conveyor conveyor;
-    private Compressor compressor;
     private Power power;
 
     private boolean climbEnabled = false;
@@ -63,8 +68,10 @@ public class RobotContainer {
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
+  
     private DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
-
+    private final RobotLift robotLift = new RobotLift(climb, () -> opStick.getY(Hand.kRight));
+    
     // TODO: put in commandbase
 
     public RobotContainer() {
@@ -87,6 +94,11 @@ public class RobotContainer {
         final JoystickButton output = new JoystickButton(driveStick, 1);
         intake.whenPressed(new BallIntake(conveyor));
         output.whileHeld(new ShootBalls(conveyor, .25));
+      
+        SmartDashboard.putData("releaseLatch", new ReleaseLatch(climb));
+
+        final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
+        releaseLatch.whenPressed(new ReleaseLatch(climb));
     }
 
     public Command getAutonomousCommand() {
@@ -153,14 +165,6 @@ public class RobotContainer {
                 .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
         ShootBallsCommand.add(new ShootBalls(conveyor, 0.5));
-
-        ShuffleboardLayout colorWheelCommand = commandTab.getLayout("ColorWheel", BuiltInLayouts.kList).withSize(2, 2)
-                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-
-        colorWheelCommand.add(new SpinToColor(color, Color.kRed));
-        colorWheelCommand.add(new SpinToColor(color, Color.kBlue));
-        colorWheelCommand.add(new SpinToColor(color, Color.kGreen));
-        colorWheelCommand.add(new SpinToColor(color, Color.kYellow));
 
         // turn to button
         

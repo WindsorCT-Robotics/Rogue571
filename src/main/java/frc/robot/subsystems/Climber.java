@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -16,8 +17,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Climber extends SubsystemBase {
 
     private final WPI_TalonSRX winch;
+    private final Solenoid latchSolenoid;
 
     public Climber() {
+
 
         winch = new WPI_TalonSRX(5);
         addChild("Winch", winch);
@@ -26,13 +29,31 @@ public class Climber extends SubsystemBase {
         layout.withProperties(Map.of("Label position", "LEFT"));
         layout.addNumber("Winch speed", () -> winch.get());
 
+        latchSolenoid = new Solenoid(15,0);
+        addChild("latchSolenoid", latchSolenoid);
+
     }
 
     @Override
     public void periodic() {
     }
 
-    public void turnWinch(int speed) {
-        winch.set(speed);
+    public void turn(double speed) {
+        if(latchSolenoid.get())
+            winch.set(speed);
+        else
+            stop();
+    }
+
+    public void stop(){
+        winch.set(0);
+    }
+
+    public void releaseLatch(){
+        latchSolenoid.set(true);
+    }
+
+    public void closeLatch(){
+        latchSolenoid.set(false);
     }
 }
