@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Power extends SubsystemBase {
-    private final PowerDistributionPanel pDP = new PowerDistributionPanel(20);
+    private final PowerDistributionPanel pDP = new PowerDistributionPanel(0);
     private final DoubleSupplier inputVoltageSupplier,
                                  temperatureCSupplier,
                                  totalCurrentSupplier,
@@ -23,8 +23,7 @@ public class Power extends SubsystemBase {
                                  intakeMotorCurrent,
                                  colorSpinnerMotorCurrent,
                                  conveyor1MotorCurrent,
-                                 conveyor2MotorCurrent,
-                                 PcmCurrent;
+                                 conveyor2MotorCurrent;
 
     public Power() {
         final ShuffleboardLayout powerDistributionPanelLayout = Shuffleboard.getTab("Power")
@@ -34,17 +33,16 @@ public class Power extends SubsystemBase {
         inputVoltageSupplier = () -> pDP.getVoltage();
         temperatureCSupplier = () -> pDP.getTemperature();
         totalCurrentSupplier = () -> pDP.getTotalCurrent();
-        lfMotorCurrent    = () -> pDP.getCurrent( 0);
-        lrMotorCurrent    = () -> pDP.getCurrent( 1);
-        rfMotorCurrent    = () -> pDP.getCurrent( 2);
-        rrMotorCurrent    = () -> pDP.getCurrent( 3);
-        winchMotorCurrent    = () -> pDP.getCurrent( 4);
-        levelMotorCurrent    = () -> pDP.getCurrent( 5);
-        intakeMotorCurrent    = () -> pDP.getCurrent( 6);
-        colorSpinnerMotorCurrent    = () -> pDP.getCurrent( 7);
-        conveyor1MotorCurrent    = () -> pDP.getCurrent( 8);
-        conveyor2MotorCurrent    = () -> pDP.getCurrent( 9);
-        PcmCurrent    = () -> pDP.getCurrent(14);
+        lfMotorCurrent    = () -> pDP.getCurrent(0);
+        lrMotorCurrent    = () -> pDP.getCurrent(1);
+        rfMotorCurrent    = () -> pDP.getCurrent(2);
+        rrMotorCurrent    = () -> pDP.getCurrent(3);
+        winchMotorCurrent    = () -> pDP.getCurrent(15);
+        levelMotorCurrent    = () -> pDP.getCurrent(14);
+        intakeMotorCurrent    = () -> pDP.getCurrent(13);
+        colorSpinnerMotorCurrent    = () -> pDP.getCurrent(12);
+        conveyor1MotorCurrent    = () -> pDP.getCurrent(4);
+        conveyor2MotorCurrent    = () -> pDP.getCurrent(11);
 
 
         powerDistributionPanelLayout.addNumber("Input Voltage", inputVoltageSupplier);
@@ -60,6 +58,5 @@ public class Power extends SubsystemBase {
         powerDistributionPanelLayout.addNumber("Color Spinner motor current", colorSpinnerMotorCurrent);
         powerDistributionPanelLayout.addNumber("Conveyor 1 current", conveyor1MotorCurrent);
         powerDistributionPanelLayout.addNumber("Conveyor 2 current", conveyor2MotorCurrent);
-        powerDistributionPanelLayout.addNumber("PCM current", PcmCurrent);
     }
 }
