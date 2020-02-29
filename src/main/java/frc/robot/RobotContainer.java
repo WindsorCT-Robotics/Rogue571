@@ -41,8 +41,8 @@ public class RobotContainer {
     private boolean driveEnabled = true;
     private boolean levelEnabled = false;
     private boolean conveyorEnabled = false;
-    private boolean compressorEnabled = false;
-    private boolean powerEnabled = true;
+    private boolean compressorEnabled = true;
+    private boolean powerEnabled = false;
 
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);

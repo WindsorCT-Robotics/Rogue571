@@ -18,7 +18,7 @@ public class Power extends SubsystemBase {
                                  lrMotorCurrent,
                                  rfMotorCurrent,
                                  rrMotorCurrent,
-                                 winchMotorCurrent,
+                                 //winchMotorCurrent,
                                  levelMotorCurrent,
                                  intakeMotorCurrent,
                                  colorSpinnerMotorCurrent,
@@ -37,7 +37,7 @@ public class Power extends SubsystemBase {
         lrMotorCurrent    = () -> pDP.getCurrent(1);
         rfMotorCurrent    = () -> pDP.getCurrent(2);
         rrMotorCurrent    = () -> pDP.getCurrent(3);
-        winchMotorCurrent    = () -> pDP.getCurrent(15);
+        //winchMotorCurrent    = () -> pDP.getCurrent(15);
         levelMotorCurrent    = () -> pDP.getCurrent(14);
         intakeMotorCurrent    = () -> pDP.getCurrent(13);
         colorSpinnerMotorCurrent    = () -> pDP.getCurrent(12);
@@ -52,7 +52,7 @@ public class Power extends SubsystemBase {
         powerDistributionPanelLayout.addNumber("Left Rear motor current", lrMotorCurrent);
         powerDistributionPanelLayout.addNumber("Right Front motor current", rfMotorCurrent);
         powerDistributionPanelLayout.addNumber("Right Rear motor current", rrMotorCurrent);
-        powerDistributionPanelLayout.addNumber("Winch motor current", winchMotorCurrent);
+        //powerDistributionPanelLayout.addNumber("Winch motor current", winchMotorCurrent);
         powerDistributionPanelLayout.addNumber("Level motor current", levelMotorCurrent);
         powerDistributionPanelLayout.addNumber("Intake motor current", intakeMotorCurrent);
         powerDistributionPanelLayout.addNumber("Color Spinner motor current", colorSpinnerMotorCurrent);
