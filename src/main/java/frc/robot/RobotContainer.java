@@ -54,13 +54,13 @@ public class RobotContainer {
     private Conveyor conveyor;
     private Power power;
 
-    private boolean climbEnabled = false;
+    private boolean climbEnabled = true;
     private boolean colorEnabled = false;
     private boolean driveEnabled = true;
     private boolean levelEnabled = false;
     private boolean conveyorEnabled = false;
     private boolean compressorEnabled = true;
-    private boolean powerEnabled = false;
+    private boolean powerEnabled = true;
 
     private final ShuffleboardTab commandTab = Shuffleboard.getTab("Commands");
     private final NetworkTableEntry targetAngle = commandTab.add("Target Angle", 1).getEntry();
@@ -68,10 +68,7 @@ public class RobotContainer {
     // initialize joystick and off-brand XBox conroller from Chinese Walmart
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
-  
-    private DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
-    private final RobotLift robotLift = new RobotLift(climb, () -> opStick.getY(Hand.kRight));
-    
+
     // TODO: put in commandbase
 
     public RobotContainer() {
@@ -83,22 +80,12 @@ public class RobotContainer {
         createDriveSubsystem();
         createLevelSubsystem();
         createPowerSubsystem();
-        addCommandsToDashboard();
 
         LiveWindow.disableAllTelemetry();
     }
 
     private void configureButtonBindings() {
-        // joystick buttons
-        final JoystickButton intake = new JoystickButton(driveStick, 2);
-        final JoystickButton output = new JoystickButton(driveStick, 1);
-        intake.whenPressed(new BallIntake(conveyor));
-        output.whileHeld(new ShootBalls(conveyor, .25));
-      
-        SmartDashboard.putData("releaseLatch", new ReleaseLatch(climb));
 
-        final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
-        releaseLatch.whenPressed(new ReleaseLatch(climb));
     }
 
     public Command getAutonomousCommand() {
@@ -108,6 +95,21 @@ public class RobotContainer {
     public void createClimbSubsystem() {
         if (climbEnabled) {
             climb = new Climber();
+
+            // release the climber latch
+            final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
+            releaseLatch.whenPressed(new ReleaseLatch(climb));
+
+            // lift the robot
+            final RobotLift robotLift = new RobotLift(climb, () -> opStick.getY(Hand.kRight));
+            climb.setDefaultCommand(robotLift);
+
+            ShuffleboardLayout climberCommands = commandTab.getLayout("Climber Commands", BuiltInLayouts.kList)
+                    .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
+                                                                                                           // labels for
+                                                                                                           // commands
+
+            climberCommands.add(new ReleaseLatch(climb));
         }
     }
 
@@ -126,14 +128,49 @@ public class RobotContainer {
     public void createConveyorSubsystem() {
         if (conveyorEnabled) {
             conveyor = new Conveyor();
+
+            final JoystickButton intake = new JoystickButton(driveStick, 2);
+            final JoystickButton output = new JoystickButton(driveStick, 1);
+
+            intake.whenPressed(new BallIntake(conveyor));
+            output.whileHeld(new ShootBalls(conveyor, .25));
+
+            // add buttons to Command Tab of Shuffleboard layout only if Conveyor Subsystem
+            // is enabled
+            ShuffleboardLayout BallIntakeCommand = commandTab.getLayout("BallIntake", BuiltInLayouts.kList)
+                    .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
+                                                                                                           // labels for
+                                                                                                           // commands
+
+            BallIntakeCommand.add(new BallIntake(conveyor));
+
+            ShuffleboardLayout BallOutputCommand = commandTab.getLayout("BallOutput", BuiltInLayouts.kList)
+                    .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
+                                                                                                           // labels for
+                                                                                                           // commands
+
+            BallOutputCommand.add(new BallOutput(conveyor));
+
+            ShuffleboardLayout ShootBallsCommand = commandTab.getLayout("ShootBalls", BuiltInLayouts.kList)
+                    .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
+                                                                                                           // labels for
+                                                                                                           // commands
+
+            ShootBallsCommand.add(new ShootBalls(conveyor, 0.5));
         }
     }
 
     public void createDriveSubsystem() {
         if (driveEnabled) {
             drive = new Drive();
-            driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
+            DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
             drive.setDefaultCommand(driveCommand);
+
+            ShuffleboardLayout turnToCommand = commandTab.getLayout("Target Angle", BuiltInLayouts.kList).withSize(2, 2)
+                    .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+            turnToCommand.add(new TurnTo(targetAngle.getDouble(1.0), drive));
+
         }
     }
 
@@ -149,29 +186,4 @@ public class RobotContainer {
         }
     }
 
-    private void addCommandsToDashboard() {
-
-        ShuffleboardLayout BallIntakeCommand = commandTab.getLayout("BallIntake", BuiltInLayouts.kList).withSize(2, 2)
-                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-
-        BallIntakeCommand.add(new BallIntake(conveyor));
-
-        ShuffleboardLayout BallOutputCommand = commandTab.getLayout("BallOutput", BuiltInLayouts.kList).withSize(2, 2)
-                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-
-        BallOutputCommand.add(new BallOutput(conveyor));
-
-        ShuffleboardLayout ShootBallsCommand = commandTab.getLayout("ShootBalls", BuiltInLayouts.kList).withSize(2, 2)
-                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-
-        ShootBallsCommand.add(new ShootBalls(conveyor, 0.5));
-
-        // turn to button
-        
-        ShuffleboardLayout turnToCommand = commandTab.getLayout("Target Angle", BuiltInLayouts.kList).withSize(2, 2)
-                .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-
-        turnToCommand.add(new TurnTo(targetAngle.getDouble(1.0), drive));
-
-    }
 }
