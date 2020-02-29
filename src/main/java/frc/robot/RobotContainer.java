@@ -11,6 +11,8 @@ import java.util.Map;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -33,6 +35,9 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Leveling;
 import frc.robot.subsystems.Power;
+import frc.robot.subsystems.Compressor;
+import frc.robot.commands.ReleaseLatch;
+import frc.robot.commands.RobotLift;
 
 /**
  * This class takes the place of much of the old robot class, and entirely
@@ -41,6 +46,13 @@ import frc.robot.subsystems.Power;
  */
 public class RobotContainer {
     // initializing robot subsytems
+    private final Compressor compressor = new Compressor();
+    private final Climber climb = new Climber();
+    //private final ColorSubsystem color = new ColorSubsystem();
+    private final Drive drive = new Drive();
+    //private final Leveling level = new Leveling();
+    //private final Conveyor conveyor = new Conveyor();
+    //private final Power power = new Power();
     private Climber climb;
     private ColorSubsystem color;
     private Drive drive;
@@ -64,7 +76,8 @@ public class RobotContainer {
     private final Joystick driveStick = new Joystick(0);
     private final XboxController opStick = new XboxController(1);
     private final DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
-
+    private final RobotLift robotLift = new RobotLift(climb, () -> opStick.getY(Hand.kRight));
+    
     // TODO: put in commandbase
 
     public RobotContainer() {
@@ -83,14 +96,20 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        SmartDashboard.putData("releaseLatch", new ReleaseLatch(climb));
         // xbox buttons
         final JoystickButton green = new JoystickButton(opStick, 1);
         final JoystickButton red = new JoystickButton(opStick, 2);
         final JoystickButton blue = new JoystickButton(opStick, 3);
         final JoystickButton yellow = new JoystickButton(opStick, 4);
+
+        final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
+
         // joystick buttons
         final JoystickButton intake = new JoystickButton(driveStick, 2);
         final JoystickButton output = new JoystickButton(driveStick, 1);
+
+        releaseLatch.whenPressed(new ReleaseLatch(climb));
         output.whileHeld(new ShootBalls(conveyor, .25));
     }
 

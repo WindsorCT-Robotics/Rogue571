@@ -16,12 +16,14 @@ public class Compressor extends SubsystemBase {
         compressor.start();
         compressor.setClosedLoopControl(true);
 
+        /**
         final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems")
             .getLayout("Compressor",BuiltInLayouts.kList);
         layout.withProperties(Map.of("Label position", "LEFT"));
         layout.addBoolean("compressor enabled?", () -> compressor.enabled());
         layout.addBoolean("pressure switch value", () -> compressor.getPressureSwitchValue());
         layout.addNumber("compressor current", () -> compressor.getCompressorCurrent());
+        */
     }
 
 }

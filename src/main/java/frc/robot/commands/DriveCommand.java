@@ -22,13 +22,13 @@ import frc.robot.subsystems.Drive;
 
 public class DriveCommand extends CommandBase {
 
-
-
     private final DoubleSupplier speed;
     private final DoubleSupplier twist;
     private final Drive drive;
-    public DriveCommand(Drive drive, DoubleSupplier speed, DoubleSupplier twist) {
+    private double speedValue;
+    private double twistValue;
 
+    public DriveCommand(Drive drive, DoubleSupplier speed, DoubleSupplier twist) {
 
         this.speed = speed;
         this.twist = twist;
@@ -36,16 +36,13 @@ public class DriveCommand extends CommandBase {
 
         addRequirements(drive);
 
-    
-
-        final ShuffleboardLayout driveStickLayout = Shuffleboard.getTab("Commands")
-        .getLayout("DriveStick", BuiltInLayouts.kList);
+        final ShuffleboardLayout driveStickLayout = Shuffleboard.getTab("Commands").getLayout("DriveStick",
+                BuiltInLayouts.kList);
         driveStickLayout.withProperties(Map.of("Label position", "LEFT"));
-        
+
         driveStickLayout.addNumber("Speed", speed);
         driveStickLayout.addNumber("Twist", twist);
-        
-        
+
     }
 
     // Called just before this Command runs the first time
@@ -56,9 +53,9 @@ public class DriveCommand extends CommandBase {
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
-        double speedValue = speed.getAsDouble();
-        double twistValue = twist.getAsDouble();
-        
+        speedValue = speed.getAsDouble();
+        twistValue = twist.getAsDouble();
+
         drive.arcadeDrive(speedValue, twistValue);
     }
 
