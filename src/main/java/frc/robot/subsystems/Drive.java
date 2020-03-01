@@ -40,8 +40,8 @@ public class Drive extends SubsystemBase {
 
     private final double DEADBAND_FORWARD = -.1;
     private final double DEADBAND_REVERSE = .1;
-    private final double DEADBAND_RIGHT= -.15;
-    private final double DEADBAND_LEFT= .15;
+    private final double DEADBAND_RIGHT = -.15;
+    private final double DEADBAND_LEFT = .15;
     private final double FORWARD_SPEED_SCALE = .7;
     private final double TWIST_SPEED_SCALE = .8;
 
@@ -56,14 +56,14 @@ public class Drive extends SubsystemBase {
         // init navx
         try {
             navx = new AHRS(SPI.Port.kMXP);
-            navx.zeroYaw();
+            navx.reset();
         } catch (RuntimeException exe) {
             DriverStation.reportError("NavX init failed- some autonomous components may not work right!", true);
         }
 
         layout = Shuffleboard.getTab("Subsystems").getLayout("NavX", BuiltInLayouts.kList);
         layout.withProperties(Map.of("Label position", "LEFT"));
-//        putToDashboard(); // put values onto dashboard
+        putToDashboard(); // put values onto dashboard
 
     }
 
@@ -84,7 +84,7 @@ public class Drive extends SubsystemBase {
         double outputSpeed, outputTwist;
         if (speed < DEADBAND_FORWARD || speed > DEADBAND_REVERSE)
             outputSpeed = speed;
-        else 
+        else
             outputSpeed = 0;
 
         if (twist > DEADBAND_RIGHT || twist < DEADBAND_LEFT)
@@ -107,6 +107,11 @@ public class Drive extends SubsystemBase {
         differentialDrive.tankDrive(left, right);
     }
 
+
+    public void resetNavX() {
+        navx.reset();
+        navx.zeroYaw();
+    }
     /**
      * returns the navx heading
      * 

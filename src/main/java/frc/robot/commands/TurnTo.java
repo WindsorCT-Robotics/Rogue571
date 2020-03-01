@@ -19,8 +19,6 @@ import frc.robot.subsystems.Drive;
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class TurnTo extends PIDCommand {
 
-  private final ShuffleboardLayout pid;
-
   /**
    * Creates a new TurnTo.
    * @param heading  heading on a scale from -180 to 180
@@ -29,7 +27,7 @@ public class TurnTo extends PIDCommand {
   public TurnTo(double heading, Drive drive) {
     super(
         // The controller that the command will use
-        new PIDController(4, 0, 0),
+        new PIDController(.5, 0.0, 0.0),
         // This should return the measurement
         drive.navx::getYaw,
         // This should return the setpoint (can also be a constant)
@@ -37,9 +35,8 @@ public class TurnTo extends PIDCommand {
         // This uses the output
         output -> drive.tankDrive(output, -output));
     addRequirements(drive);
+    getController().setTolerance(5);
     
-    pid = Shuffleboard.getTab("Commands").getLayout("pid", BuiltInLayouts.kList);
-    pid.add("TurnTo PID", this);
   }
 
   @Override
@@ -50,6 +47,6 @@ public class TurnTo extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return getController().atSetpoint();
   }
 }

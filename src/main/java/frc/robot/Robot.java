@@ -45,6 +45,7 @@ public class Robot extends TimedRobot {
         HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_RobotBuilder);
 
         SmartDashboard.putData("Auto mode", chooser);
+
     }
 
     /**
@@ -63,8 +64,10 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
         // schedule the autonomous command (example)
-        if (autonomousCommand != null)
+        if (autonomousCommand != null) {
+            robotContainer.getDrive().resetNavX();
             autonomousCommand.schedule();
+        }
     }
 
     /**
