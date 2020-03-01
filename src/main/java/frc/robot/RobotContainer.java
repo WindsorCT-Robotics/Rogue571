@@ -8,25 +8,25 @@
 package frc.robot;
 
 import java.util.Map;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.AutonomousCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.BallIntake;
 import frc.robot.commands.BallOutput;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.RobotLift;
 import frc.robot.commands.ShootBalls;
-import frc.robot.commands.SpinToColor;
 import frc.robot.commands.TurnTo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ColorSubsystem;
@@ -35,9 +35,6 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Leveling;
 import frc.robot.subsystems.Power;
-import frc.robot.subsystems.Compressor;
-import frc.robot.commands.ReleaseLatch;
-import frc.robot.commands.RobotLift;
 
 /**
  * This class takes the place of much of the old robot class, and entirely
@@ -89,7 +86,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new AutonomousCommand(drive);
+        return new AutonomousCommand(drive, climb);
     }
 
     public void createClimbSubsystem() {
@@ -98,7 +95,7 @@ public class RobotContainer {
 
             // release the climber latch
             final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
-            releaseLatch.whenPressed(new ReleaseLatch(climb));
+            releaseLatch.whenPressed(new InstantCommand(climb::releaseLatch, climb));
 
             // lift the robot
             final RobotLift robotLift = new RobotLift(climb, () -> opStick.getY(Hand.kRight));
@@ -109,7 +106,7 @@ public class RobotContainer {
                                                                                                            // labels for
                                                                                                            // commands
 
-            climberCommands.add(new ReleaseLatch(climb));
+            climberCommands.add("release latch", new InstantCommand(climb::releaseLatch, climb));
         }
     }
 
@@ -165,11 +162,18 @@ public class RobotContainer {
             drive = new Drive();
             DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
             drive.setDefaultCommand(driveCommand);
+            drive.resetNavX();
 
             ShuffleboardLayout turnToCommand = commandTab.getLayout("Target Angle", BuiltInLayouts.kList).withSize(2, 2)
                     .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
             turnToCommand.add(new TurnTo(targetAngle.getDouble(1.0), drive));
+            ShuffleboardLayout driveCommands = commandTab.getLayout("Drive Commands", BuiltInLayouts.kList)
+                    .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
+                                                                                                           // labels for
+                                                                                                           // commands
+
+            driveCommands.add("resetNavx", new InstantCommand(drive::resetNavX, drive));
 
         }
     }
@@ -186,4 +190,7 @@ public class RobotContainer {
         }
     }
 
+    public Drive getDrive() {
+        return drive;
+    }
 }
