@@ -17,11 +17,12 @@ import frc.robot.subsystems.Conveyor;
  *
  */
 public class ShootBalls extends CommandBase {
-    private Conveyor conveyor;
-    private double power; 
+    private final Conveyor conveyor;
+    private final double power; 
 
     public ShootBalls(Conveyor conveyor, double power) {
         addRequirements(conveyor);
+        this.conveyor = conveyor;
         this.power = power;
     }
 
@@ -46,7 +47,6 @@ public class ShootBalls extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         conveyor.turnConveyor(0);
-        conveyor.resetBallCounter();
     }
 
 }
