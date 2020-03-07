@@ -33,7 +33,7 @@ import frc.robot.subsystems.ColorSubsystem;
 import frc.robot.subsystems.Compressor;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Leveling;
+import frc.robot.subsystems.Leveler;
 import frc.robot.subsystems.Power;
 
 /**
@@ -47,7 +47,7 @@ public class RobotContainer {
     private Climber climb;
     private ColorSubsystem color;
     private Drive drive;
-    private Leveling level;
+    private Leveler level;
     private Conveyor conveyor;
     private Power power;
 
@@ -180,7 +180,7 @@ public class RobotContainer {
 
     public void createLevelSubsystem() {
         if (levelEnabled) {
-            level = new Leveling();
+            level = new Leveler();
         }
     }
 

@@ -22,11 +22,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /**
  *
  */
-public class Leveling extends SubsystemBase {
+public class Leveler extends SubsystemBase {
 
     private final WPI_TalonSRX levelWheels;
 
-    public Leveling() {
+    public Leveler() {
 
         levelWheels = new WPI_TalonSRX(6);
         addChild("Level", levelWheels);
