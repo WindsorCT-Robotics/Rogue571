@@ -45,7 +45,6 @@ public class BallOutput extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         conveyor.turnIntakeRollers(0);
-        conveyor.resetBallCounter();
     }
 
 }

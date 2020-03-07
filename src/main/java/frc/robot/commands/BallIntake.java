@@ -40,7 +40,7 @@ public class BallIntake extends CommandBase {
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
-        if (conveyor.isBallOut()) {
+        if (conveyor.isBallTop()) {
             isFinished = true;
         } else {
             manageIntakeRollers();
@@ -57,6 +57,7 @@ public class BallIntake extends CommandBase {
     // Called once after isFinished returns true
     @Override
     public void end(boolean interrupted) {
+        conveyor.stop();
     }
 
     private void manageIntakeRollers() {

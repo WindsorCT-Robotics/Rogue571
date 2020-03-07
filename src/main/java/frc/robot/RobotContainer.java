@@ -55,7 +55,7 @@ public class RobotContainer {
     private boolean colorEnabled = false;
     private boolean driveEnabled = true;
     private boolean levelEnabled = false;
-    private boolean conveyorEnabled = false;
+    private boolean conveyorEnabled = true;
     private boolean compressorEnabled = true;
     private boolean powerEnabled = true;
 
@@ -130,7 +130,7 @@ public class RobotContainer {
             final JoystickButton output = new JoystickButton(driveStick, 1);
 
             intake.whenPressed(new BallIntake(conveyor));
-            output.whileHeld(new ShootBalls(conveyor, .25));
+            output.whileHeld(new ShootBalls(conveyor, 1));
 
             // add buttons to Command Tab of Shuffleboard layout only if Conveyor Subsystem
             // is enabled
