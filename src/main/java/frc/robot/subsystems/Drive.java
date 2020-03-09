@@ -38,6 +38,8 @@ public class Drive extends SubsystemBase {
     public AHRS navx;
     private final ShuffleboardLayout layout;
 
+    private int driveFace = 1;
+
     private final double DEADBAND_FORWARD = -.1;
     private final double DEADBAND_REVERSE = .1;
     private final double DEADBAND_RIGHT = -.15;
@@ -83,12 +85,12 @@ public class Drive extends SubsystemBase {
     public void arcadeDrive(double speed, double twist) {
         double outputSpeed, outputTwist;
         if (speed < DEADBAND_FORWARD || speed > DEADBAND_REVERSE)
-            outputSpeed = speed;
+            outputSpeed = speed * driveFace;
         else
             outputSpeed = 0;
 
         if (twist > DEADBAND_RIGHT || twist < DEADBAND_LEFT)
-            outputTwist = twist;
+            outputTwist = speed * driveFace;
         else
             outputTwist = 0;
 
@@ -107,11 +109,11 @@ public class Drive extends SubsystemBase {
         differentialDrive.tankDrive(left, right);
     }
 
-
     public void resetNavX() {
         navx.reset();
         navx.zeroYaw();
     }
+
     /**
      * returns the navx heading
      * 
@@ -155,17 +157,29 @@ public class Drive extends SubsystemBase {
         final DoubleSupplier speedSupplier = () -> getAcceleration();
         final BooleanSupplier connectionSupplier = () -> navx.isConnected();
         final BooleanSupplier calibrationSupplier = () -> navx.isCalibrating();
+        final BooleanSupplier toggleEngaged = () -> this.isToggleEngaged();
 
         layout.addNumber("distance", distanceSupplier);
         layout.addNumber("yaw", yawSupplier);
         layout.addNumber("acceleration", speedSupplier);
         layout.addBoolean("connected", connectionSupplier);
         layout.addBoolean("calibrating", calibrationSupplier);
-
+        layout.addBoolean("toggle engaged", toggleEngaged);
     }
 
     public void stop() {
         tankDrive(0, 0);
     }
 
+    public void toggleDrive() {
+        driveFace = -driveFace;
+    }
+
+    public boolean isToggleEngaged() {
+        if (driveFace == 1) {
+            return false;
+        }
+        return true;
+
+    }
 }
