@@ -175,6 +175,11 @@ public class RobotContainer {
 
             driveCommands.add("resetNavx", new InstantCommand(drive::resetNavX, drive));
 
+            //toggledrive button
+            final JoystickButton driveToggle = new JoystickButton(driveStick, 3);
+            driveToggle.whenPressed(new InstantCommand(drive::toggleDrive, drive));
+
+
         }
     }
 
