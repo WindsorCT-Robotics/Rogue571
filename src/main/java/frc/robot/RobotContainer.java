@@ -27,6 +27,7 @@ import frc.robot.commands.BallOutput;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.RobotLift;
 import frc.robot.commands.ShootBalls;
+import frc.robot.commands.Sidle;
 import frc.robot.commands.TurnTo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ColorSubsystem;
@@ -91,7 +92,8 @@ public class RobotContainer {
 
     public void createClimbSubsystem() {
         if (climbEnabled) {
-            climb = new Climber();
+            level = new Leveling();
+            climb = new Climber(level);
 
             // release the climber latch
             final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
@@ -101,10 +103,16 @@ public class RobotContainer {
             final RobotLift robotLift = new RobotLift(climb, () -> opStick.getY(Hand.kRight));
             climb.setDefaultCommand(robotLift);
 
+            // Adjust positioning
+            final Sidle robotSidle = new Sidle(level, () -> opStick.getY(Hand.kLeft));
+            level.setDefaultCommand(robotSidle);
+
             ShuffleboardLayout climberCommands = commandTab.getLayout("Climber Commands", BuiltInLayouts.kList)
                     .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
                                                                                                            // labels for
                                                                                                            // commands
+
+            
 
             climberCommands.add("release latch", new InstantCommand(climb::releaseLatch, climb));
         }

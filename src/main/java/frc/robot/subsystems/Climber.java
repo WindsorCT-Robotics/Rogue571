@@ -18,12 +18,12 @@ public class Climber extends SubsystemBase {
 
     private final WPI_TalonSRX winch;
     private final Solenoid latchSolenoid;
+    private final Leveling levelingMotor;
 
-    public Climber() {
-
-
+    public Climber(Leveling levelingMotor) {
         winch = new WPI_TalonSRX(5);
         addChild("Winch", winch);
+        this.levelingMotor = levelingMotor;
 
         final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems").getLayout("Climber", BuiltInLayouts.kList);
         layout.withProperties(Map.of("Label position", "LEFT"));
@@ -50,10 +50,12 @@ public class Climber extends SubsystemBase {
     }
 
     public void releaseLatch(){
+        levelingMotor.setLockEnabled(false);
         latchSolenoid.set(true);
     }
 
     public void closeLatch(){
+        levelingMotor.setLockEnabled(false);
         latchSolenoid.set(false);
     }
 }
