@@ -48,7 +48,7 @@ public class Drive extends SubsystemBase {
     private final double TWIST_SPEED_SCALE = .8;
 
     public Drive() {
-
+        right.setInverted(true);
         differentialDrive = new DifferentialDrive(left, right);
         addChild("Differential Drive", differentialDrive);
         differentialDrive.setSafetyEnabled(false);

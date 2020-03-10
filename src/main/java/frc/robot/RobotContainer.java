@@ -168,7 +168,7 @@ public class RobotContainer {
                     .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
             turnToCommand.add(new TurnTo(targetAngle.getDouble(1.0), drive));
-            ShuffleboardLayout driveCommands = commandTab.getLayout("Drive Commands", BuiltInLayouts.kList)
+            ShuffleboardLayout driveCommands = commandTab.getLayout("reset NavX", BuiltInLayouts.kList)
                     .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
                                                                                                            // labels for
                                                                                                            // commands
