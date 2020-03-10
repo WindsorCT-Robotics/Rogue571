@@ -135,9 +135,11 @@ public class RobotContainer {
             conveyor = new Conveyor();
 
             final JoystickButton intake = new JoystickButton(driveStick, 2);
+            final JoystickButton dump = new JoystickButton(driveStick, 3);
             final JoystickButton output = new JoystickButton(driveStick, 1);
 
             intake.whenPressed(new BallIntake(conveyor));
+            dump.whenPressed(new ShootBalls(conveyor, -.5));
             output.whileHeld(new ShootBalls(conveyor, 1));
 
             // add buttons to Command Tab of Shuffleboard layout only if Conveyor Subsystem
