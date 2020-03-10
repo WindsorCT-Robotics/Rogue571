@@ -57,7 +57,7 @@ public class Drive extends SubsystemBase {
 
         // init navx
         try {
-            navx = new AHRS(SPI.Port.kMXP);
+            navx = new AHRS(SPI.Port.kMXP, 57600, (byte) 60);
             navx.reset();
         } catch (RuntimeException exe) {
             DriverStation.reportError("NavX init failed- some autonomous components may not work right!", true);
