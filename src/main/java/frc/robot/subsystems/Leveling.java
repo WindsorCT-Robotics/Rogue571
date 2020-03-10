@@ -31,20 +31,22 @@ public class Leveling extends SubsystemBase {
         levelWheels = new WPI_TalonSRX(6);
         addChild("Level", levelWheels);
 
-        final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems").getLayout("Level Wheels",
+        final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems").getLayout("Climber Commands",
                 BuiltInLayouts.kList);
         layout.withProperties(Map.of("Label position", "LEFT"));
         layout.addNumber("Speed", () -> levelWheels.get());
-
     }
 
     @Override
     public void periodic() {
         // Put code here to be run every loop
-
     }
 
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
+    public void setLockEnabled(boolean enabled) {
+        levelWheels.setSafetyEnabled(enabled);
+    }
 
+    public void move(double speed) {
+        levelWheels.set(speed);
+    }
 }
