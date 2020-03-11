@@ -27,6 +27,7 @@ import frc.robot.commands.BallOutput;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.RobotLift;
 import frc.robot.commands.ShootBalls;
+import frc.robot.commands.Sidle;
 import frc.robot.commands.TurnTo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ColorSubsystem;
@@ -55,7 +56,7 @@ public class RobotContainer {
     private boolean colorEnabled = false;
     private boolean driveEnabled = true;
     private boolean levelEnabled = false;
-    private boolean conveyorEnabled = false;
+    private boolean conveyorEnabled = true;
     private boolean compressorEnabled = true;
     private boolean powerEnabled = true;
 
@@ -91,7 +92,8 @@ public class RobotContainer {
 
     public void createClimbSubsystem() {
         if (climbEnabled) {
-            climb = new Climber();
+            level = new Leveling();
+            climb = new Climber(level);
 
             // release the climber latch
             final JoystickButton releaseLatch = new JoystickButton(opStick, 6);
@@ -101,10 +103,16 @@ public class RobotContainer {
             final RobotLift robotLift = new RobotLift(climb, () -> opStick.getY(Hand.kRight));
             climb.setDefaultCommand(robotLift);
 
+            // Adjust positioning
+            final Sidle robotSidle = new Sidle(level, () -> opStick.getY(Hand.kLeft));
+            level.setDefaultCommand(robotSidle);
+
             ShuffleboardLayout climberCommands = commandTab.getLayout("Climber Commands", BuiltInLayouts.kList)
                     .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
                                                                                                            // labels for
                                                                                                            // commands
+
+            
 
             climberCommands.add("release latch", new InstantCommand(climb::releaseLatch, climb));
         }
@@ -126,11 +134,15 @@ public class RobotContainer {
         if (conveyorEnabled) {
             conveyor = new Conveyor();
 
-            final JoystickButton intake = new JoystickButton(driveStick, 2);
-            final JoystickButton output = new JoystickButton(driveStick, 1);
+            final JoystickButton intake = new JoystickButton(opStick, 1); //A
+            final JoystickButton dump =   new JoystickButton(opStick, 3); //X
+            final JoystickButton stop =   new JoystickButton(opStick, 2); //B
+            final JoystickButton output = new JoystickButton(opStick, 4); //Y
 
             intake.whenPressed(new BallIntake(conveyor));
-            output.whileHeld(new ShootBalls(conveyor, .25));
+            dump.whileHeld(new ShootBalls(conveyor, -.5));
+            stop.whenPressed(new ShootBalls(conveyor, 0));
+            output.whileHeld(new ShootBalls(conveyor, 1));
 
             // add buttons to Command Tab of Shuffleboard layout only if Conveyor Subsystem
             // is enabled
@@ -160,7 +172,7 @@ public class RobotContainer {
     public void createDriveSubsystem() {
         if (driveEnabled) {
             drive = new Drive();
-            DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
+            DriveCommand driveCommand = new DriveCommand(drive, () -> -driveStick.getY(), () -> driveStick.getZ());
             drive.setDefaultCommand(driveCommand);
             drive.resetNavX();
 
@@ -168,12 +180,17 @@ public class RobotContainer {
                     .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
             turnToCommand.add(new TurnTo(targetAngle.getDouble(1.0), drive));
-            ShuffleboardLayout driveCommands = commandTab.getLayout("Drive Commands", BuiltInLayouts.kList)
+            ShuffleboardLayout driveCommands = commandTab.getLayout("reset NavX", BuiltInLayouts.kList)
                     .withSize(2, 2).withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); // hide
                                                                                                            // labels for
                                                                                                            // commands
 
             driveCommands.add("resetNavx", new InstantCommand(drive::resetNavX, drive));
+
+            //toggledrive button
+            final JoystickButton driveToggle = new JoystickButton(driveStick, 3);
+            driveToggle.whenPressed(new InstantCommand(drive::toggleDrive, drive));
+
 
         }
     }

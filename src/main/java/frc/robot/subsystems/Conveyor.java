@@ -49,11 +49,10 @@ public class Conveyor extends SubsystemBase {
     }*/
 
     // break beam sensors
-    private final DigitalInput outtakeBeam = new DigitalInput(0);
-    private final DigitalInput intakeBeam = new DigitalInput(1);
-    private final DigitalInput stopBeam = new DigitalInput(2);
+    private final DigitalInput bottom = new DigitalInput(1);
+    private final DigitalInput intake = new DigitalInput(0);
+    private final DigitalInput top = new DigitalInput(2);
 
-    private int numberBalls = 0;
     private boolean previousBallIn = false;
     private boolean previousBallOut = false;
     private boolean previousBallStop = false;
@@ -64,35 +63,23 @@ public class Conveyor extends SubsystemBase {
         addChild("beltMotor1", beltMotor1);
         addChild("beltMotor2", beltMotor2);
         addChild("beltMotors", (SpeedControllerGroup)beltMotors);
-        addChild("OuttakeBeam", outtakeBeam);
-        addChild("IntakeBeam", intakeBeam);
-        addChild("StopBeam", stopBeam);
+        addChild("BottomBeam", bottom);
+        addChild("IntakeBeam", intake);
+        addChild("TopBeam", top);
 
         final ShuffleboardLayout layout = Shuffleboard.getTab("Subsystems").getLayout("Conveyor", BuiltInLayouts.kList);
         layout.withProperties(Map.of("Label position", "LEFT"));
         layout.addBoolean("intake sensor", () -> isBallIn());
-        layout.addBoolean("outtake sensor", () -> isBallOut());
-        layout.addNumber("number of balls", () -> getNumBalls());
-
+        layout.addBoolean("bottom sensor", () -> isBallBottom());
+        layout.addBoolean("top sensor", () -> isBallTop());
+        
         /*final ShuffleboardLayout drawbridgeLayout = Shuffleboard.getTab("Subsystems").getLayout("Draw Bridge");
         drawbridgeLayout.addBoolean("is drawbridge open?", drawbridge::get);*/
     }
 
     @Override
     public void periodic() {
-        // Put code here to be run every loop
-        final boolean currentBallIn = isBallIn();
-        final boolean currentBallOut = isBallOut();
-        final boolean currentBallStop = isBallStop();
-//
-//TODO put in button code for intake roller (maybe)
-//if ball breaks beam = low ; if ball doesnt break beam = high 
-// this method tells me to keep track of balls
-        if(currentBallIn && !previousBallIn){
-            numberBalls++;
-        }
-        previousBallIn = currentBallIn;
-    }
+    }   
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -105,35 +92,25 @@ public class Conveyor extends SubsystemBase {
     }
 
     public boolean isBallIn() {
-        return !intakeBeam.get();
+        return !intake.get();
     }
 
-    private int getNumBalls() {
-        return numberBalls;
+
+    public boolean isBallBottom() {
+        return !bottom.get();
     }
 
-    public boolean isBallOut() {
-        return !outtakeBeam.get();
+    public boolean isBallTop() {
+        return !top.get();
     }
 
-    public boolean isBallStop() {
-        return !stopBeam.get();
+
+    public boolean isFull() {
+        return isBallTop();
     }
 
-    public void resetBallCounter(){
-        numberBalls = 0;
-    }
-
-    public boolean isFull(){
-        if (numberBalls == maxLimit){
-            return true;
-        }
-        else{return false;} 
-        
-    }
-
-    public int getCount(){
-        return numberBalls;
-
+    public void stop() {
+        turnConveyor(0);
+        turnIntakeRollers(0);
     }
 }

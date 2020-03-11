@@ -20,16 +20,13 @@ import frc.robot.subsystems.Conveyor;
  */
 public class BallIntake extends CommandBase {
 
-    private Conveyor conveyor;
-    private boolean isFinished;
+    private final Conveyor conveyor;
     private double intakeRollerSpeed = 0.5;
     private double conveyorSpeed = 0.5;
 
     public BallIntake(Conveyor conveyor) {
         this.conveyor = conveyor;
         addRequirements(conveyor);
-
-
     }
 
     // Called just before this Command runs the first time
@@ -40,23 +37,20 @@ public class BallIntake extends CommandBase {
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
-        if (conveyor.isBallOut()) {
-            isFinished = true;
-        } else {
-            manageIntakeRollers();
-            manageConveyors();
-        }
+        manageIntakeRollers();
+        manageConveyors();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     @Override
-    public boolean isFinished() {
-        return isFinished;
+    public boolean isFinished() { 
+        return (conveyor.isBallTop());
     }
 
     // Called once after isFinished returns true
     @Override
     public void end(boolean interrupted) {
+        conveyor.stop();
     }
 
     private void manageIntakeRollers() {
