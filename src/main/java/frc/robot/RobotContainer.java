@@ -92,7 +92,7 @@ public class RobotContainer {
 
     public void createClimbSubsystem() {
         if (climbEnabled) {
-            level = new Leveling();
+            level = new Leveler();
             climb = new Climber(level);
 
             // release the climber latch

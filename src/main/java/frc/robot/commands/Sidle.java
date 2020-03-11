@@ -4,13 +4,13 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Leveling;
+import frc.robot.subsystems.Leveler;
 
 public class Sidle extends CommandBase {
-    private final Leveling leveling;
+    private final Leveler leveling;
     private final DoubleSupplier speed;
 
-    public Sidle(Leveling leveling, DoubleSupplier speed) {
+    public Sidle(Leveler leveling, DoubleSupplier speed) {
         this.leveling = leveling;
         this.speed = speed;
 

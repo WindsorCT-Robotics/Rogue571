@@ -18,9 +18,9 @@ public class Climber extends SubsystemBase {
 
     private final WPI_TalonSRX winch;
     private final Solenoid latchSolenoid;
-    private final Leveling levelingMotor;
+    private final Leveler levelingMotor;
 
-    public Climber(Leveling levelingMotor) {
+    public Climber(Leveler levelingMotor) {
         winch = new WPI_TalonSRX(5);
         addChild("Winch", winch);
         this.levelingMotor = levelingMotor;
