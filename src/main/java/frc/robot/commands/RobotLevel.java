@@ -11,7 +11,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Leveling;
+import frc.robot.subsystems.Leveler;
 
 /**
  * 
@@ -20,7 +20,7 @@ public class RobotLevel extends CommandBase {
 
     private double m_Speed;
 
-    public RobotLevel(Leveling leveler, double speed) {
+    public RobotLevel(Leveler leveler, double speed) {
 
         m_Speed = speed;
 
