@@ -22,7 +22,7 @@ public class BallIntake extends CommandBase {
 
     private final Conveyor conveyor;
     private double intakeRollerSpeed = 0.5;
-    private double conveyorSpeed = 0.5;
+    private double conveyorSpeed = 0.3;
 
     public BallIntake(Conveyor conveyor) {
         this.conveyor = conveyor;
