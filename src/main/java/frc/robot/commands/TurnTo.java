@@ -8,9 +8,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.Drive;
 
@@ -27,7 +24,7 @@ public class TurnTo extends PIDCommand {
   public TurnTo(double heading, Drive drive) {
     super(
         // The controller that the command will use
-        new PIDController(.5, 0.0, 0.0),
+        new PIDController(1, 0.1, 0.2),
         // This should return the measurement
         drive.navx::getYaw,
         // This should return the setpoint (can also be a constant)
@@ -47,6 +44,11 @@ public class TurnTo extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return getController().atSetpoint();
+    boolean finished = getController().atSetpoint();
+    if (finished) {
+      System.out.println("The PID turnTo might have worked!!"); 
+    }
+    return finished;
   }
+
 }

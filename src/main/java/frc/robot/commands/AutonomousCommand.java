@@ -15,33 +15,21 @@ import frc.robot.commands.DriveStraight;
 public class AutonomousCommand extends SequentialCommandGroup {
 
     private final Drive drive;
-    private Climber climber;
 
     /**
      * @param drive The drivetrain
      */
-    public AutonomousCommand(Drive drive, Climber climber) {
+    public AutonomousCommand(Drive drive) {
         this.drive = drive;
-        this.climber = climber;
-        addRequirements(this.drive, this.climber);
-        // addCommands( // drive robot in a square (hopefully!)
-        // new DriveStraight(3, drive, 2),
-        // new TurnTo(90, drive),
-        // new DriveStraight(3, drive, 2),
-        // new TurnTo(90, drive),
-        // new DriveStraight(3, drive, 2),
-        // new TurnTo(90, drive),
-        // new DriveStraight(3, drive, 2),
-        // new TurnTo(90, drive));
+        addRequirements(this.drive);
+  /*      addCommands( // drive robot in a square (hopefully!)
+        new DriveStraight(.5, drive, .5),
+       new TurnTo(90, drive),
+        new DriveStraight(.5, drive, .5),
+        new TurnTo(180, drive),
+        new DriveStraight(.5, drive, .5),
+        new TurnTo(-90, drive),
+        new DriveStraight(.5, drive, .5),
+        new TurnTo(0, drive));*/
     }
-
-    @Override
-    public void initialize() {
-        addCommands(new DriveStraight(.5, drive, .5),
-        new TurnTo(90, drive),
-        new InstantCommand(climber::releaseLatch, climber));
-        // addCommands();
-        super.initialize();
-    }
-
 }

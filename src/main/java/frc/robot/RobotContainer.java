@@ -87,7 +87,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new AutonomousCommand(drive, climb);
+        return new AutonomousCommand(drive);
     }
 
     public void createClimbSubsystem() {
@@ -172,7 +172,7 @@ public class RobotContainer {
     public void createDriveSubsystem() {
         if (driveEnabled) {
             drive = new Drive();
-            DriveCommand driveCommand = new DriveCommand(drive, () -> -driveStick.getY(), () -> driveStick.getZ());
+            DriveCommand driveCommand = new DriveCommand(drive, () -> driveStick.getY(), () -> driveStick.getZ());
             drive.setDefaultCommand(driveCommand);
             drive.resetNavX();
 

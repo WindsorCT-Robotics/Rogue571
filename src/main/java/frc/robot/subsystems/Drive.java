@@ -40,15 +40,14 @@ public class Drive extends SubsystemBase {
 
     private int driveFace = 1;
 
-    private final double DEADBAND_FORWARD = -.1;
-    private final double DEADBAND_REVERSE = .1;
-    private final double DEADBAND_RIGHT = -.15;
-    private final double DEADBAND_LEFT = .15;
-    private final double FORWARD_SPEED_SCALE = .7;
-    private final double TWIST_SPEED_SCALE = .8;
+    private final double DEADBAND_FORWARD = -.05;
+    private final double DEADBAND_REVERSE = .05;
+    private final double DEADBAND_RIGHT = .05;
+    private final double DEADBAND_LEFT = -.05;
+    private final double FORWARD_SPEED_SCALE = .9;
+    private final double TWIST_SPEED_SCALE = .9;
 
     public Drive() {
-        right.setInverted(true);
         differentialDrive = new DifferentialDrive(left, right);
         addChild("Differential Drive", differentialDrive);
         differentialDrive.setSafetyEnabled(false);
@@ -84,16 +83,17 @@ public class Drive extends SubsystemBase {
 
     public void arcadeDrive(double speed, double twist) {
         double outputSpeed, outputTwist;
+
         if (speed < DEADBAND_FORWARD || speed > DEADBAND_REVERSE)
             outputSpeed = speed * driveFace;
         else
             outputSpeed = 0;
 
-        if (twist > DEADBAND_RIGHT || twist < DEADBAND_LEFT)
-            outputTwist = speed * driveFace;
+        if (twist < DEADBAND_LEFT || twist > DEADBAND_RIGHT)
+            outputTwist = twist * TWIST_SPEED_SCALE;
         else
             outputTwist = 0;
-
+         // square output twist
         differentialDrive.arcadeDrive(outputSpeed * FORWARD_SPEED_SCALE, outputTwist * TWIST_SPEED_SCALE);
 
     }
